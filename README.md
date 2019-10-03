@@ -9,4 +9,6 @@ Then, invoke `de.botcompany.LinuxProcessSizeDetector.rssFixedForZGC()` which giv
 
 Shared memory is not counted.
 
+You can also run `de.botcompany.LinuxProcessSizeDetector` as a main program (without arguments or with a PID).
+
 For finding process sizes on other platforms, use [OSHI](https://github.com/oshi/oshi).
