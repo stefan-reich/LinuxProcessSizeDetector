@@ -1,6 +1,10 @@
 # LinuxProcessSizeDetector
 This class fixes a bug in Linux's process size reporting when using Java's [ZGC](https://mail.openjdk.java.net/pipermail/zgc-dev/2019-October/000747.html) collector.
 
+An alternative is to use the PSS value from /proc/*/smaps_rollup which exists on newer kernels.
+
+TODO: [ZGC's address ranges may change](https://mail.openjdk.java.net/pipermail/zgc-dev/2019-October/000753.html) according to Per Liden which may break the output. 
+
 # Usage
 
 First, make sure you are on 64 Bit Linux ([function for that](http://code.botcompany.de/1025550)).
