@@ -5,6 +5,8 @@ An alternative is to use the PSS value from /proc/*/smaps_rollup which exists on
 
 TODO: [ZGC's address ranges may change](https://mail.openjdk.java.net/pipermail/zgc-dev/2019-October/000753.html) according to Per Liden which may break the output. 
 
+Note: This is a work in progress, we're still working out the best way to find out the actual memory use of a Java process with ZGC.
+
 # Usage
 
 First, make sure you are on 64 Bit Linux ([function for that](http://code.botcompany.de/1025550)).
