@@ -12,3 +12,5 @@ Shared memory is not counted.
 You can also run `de.botcompany.LinuxProcessSizeDetector` as a main program (without arguments or with a PID).
 
 For finding process sizes on other platforms, use [OSHI](https://github.com/oshi/oshi).
+
+[SuperUser](https://superuser.com/questions/1485370/linux-misreports-process-size-with-heap-multi-mapping) thread.
