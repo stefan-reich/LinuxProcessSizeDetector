@@ -1,5 +1,5 @@
 # LinuxProcessSizeDetector
-This class fixes a bug in Linux's process size reporting when using Java's ZGC collector.
+This class fixes a bug in Linux's process size reporting when using Java's [ZGC](https://mail.openjdk.java.net/pipermail/zgc-dev/2019-October/000747.html) collector.
 
 # Usage
 
