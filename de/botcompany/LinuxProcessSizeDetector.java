@@ -7,6 +7,16 @@ import java.net.*;
 import java.lang.management.*;
 
 public class LinuxProcessSizeDetector {
+  public static void main(String[] args) throws IOException {
+    rssFixedForZGC_verbose = true;
+    if (args.length == 0)
+      System.out.println("RSS of this process: " + rssFixedForZGC());
+    else {
+      int pid = Integer.parseInt(args[0]);
+      System.out.println("RSS of process " + pid + ": " + rssFixedForZGC(pid));
+    }
+  }
+  
   static boolean rssFixedForZGC_verbose = false;
 
   // get corrected RSS for this process
@@ -34,7 +44,7 @@ public class LinuxProcessSizeDetector {
         }
         // else print("Not range: " + s);
         String[] p = parseColonProperty_array(s);
-        if (eqic(first(p), "rss")) {
+        if (p != null && eqic(p[0], "rss")) {
           long size = Long.parseLong(beforeSpace(p[1]));
           if (size != 0)
             rssByRange.put(range, getOrCreate_long(rssByRange, range) + size);
@@ -45,7 +55,7 @@ public class LinuxProcessSizeDetector {
           System.out.println("Address range " + rpad(e.getKey(), 16, 'x') + ": " + toK(e.getValue()) + " MB");
         }
       Long min = null;
-      for (String _range : ll("000004", "000008", "000010", "00007c")) {
+      for (String _range : ll("000004", "000008", "000010")) {
         Long l = rssByRange.get(_range);
         if (l != null)
           min = min == null ? l : Math.min(min, l);
@@ -106,33 +116,6 @@ public class LinuxProcessSizeDetector {
     if (u1 == u2)
       return true;
     return Character.toLowerCase(u1) == Character.toLowerCase(u2);
-  }
-
-  static Object first(Object list) {
-    return first((Iterable) list);
-  }
-
-  static <A> A first(List<A> list) {
-    return empty(list) ? null : list.get(0);
-  }
-
-  static <A> A first(A[] bla) {
-    return bla == null || bla.length == 0 ? null : bla[0];
-  }
-
-  static <A> A first(Iterator<A> i) {
-    return i == null || !i.hasNext() ? null : i.next();
-  }
-
-  static <A> A first(Iterable<A> i) {
-    if (i == null)
-      return null;
-    Iterator<A> it = i.iterator();
-    return it.hasNext() ? it.next() : null;
-  }
-
-  static Character first(String s) {
-    return empty(s) ? null : s.charAt(0);
   }
 
   static String beforeSpace(String s) {
@@ -252,66 +235,6 @@ public class LinuxProcessSizeDetector {
     return o == null ? null : o.toString();
   }
 
-  static boolean empty(Collection c) {
-    return c == null || c.isEmpty();
-  }
-
-  static boolean empty(CharSequence s) {
-    return s == null || s.length() == 0;
-  }
-
-  static boolean empty(Map map) {
-    return map == null || map.isEmpty();
-  }
-
-  static boolean empty(Object[] o) {
-    return o == null || o.length == 0;
-  }
-
-  static boolean empty(Object o) {
-    if (o instanceof Collection)
-      return empty((Collection) o);
-    if (o instanceof String)
-      return empty((String) o);
-    if (o instanceof Map)
-      return empty((Map) o);
-    if (o instanceof Object[])
-      return empty((Object[]) o);
-    if (o instanceof byte[])
-      return empty((byte[]) o);
-    if (o == null)
-      return true;
-    throw fail("unknown type for 'empty': " + getType(o));
-  }
-
-  static boolean empty(Iterator i) {
-    return i == null || !i.hasNext();
-  }
-
-  static boolean empty(float[] a) {
-    return a == null || a.length == 0;
-  }
-
-  static boolean empty(int[] a) {
-    return a == null || a.length == 0;
-  }
-
-  static boolean empty(long[] a) {
-    return a == null || a.length == 0;
-  }
-
-  static boolean empty(byte[] a) {
-    return a == null || a.length == 0;
-  }
-
-  static boolean empty(short[] a) {
-    return a == null || a.length == 0;
-  }
-
-  static boolean empty(File f) {
-    return getFileSize(f) == 0;
-  }
-
   static String onlyUntilSpace(String s) {
     int i = s.indexOf(' ');
     return i >= 0 ? s.substring(0, i) : s;
@@ -373,38 +296,6 @@ public class LinuxProcessSizeDetector {
     return buf.toString().trim();
   }
 
-  static RuntimeException fail() {
-    throw new RuntimeException("fail");
-  }
-
-  static RuntimeException fail(Throwable e) {
-    throw asRuntimeException(e);
-  }
-
-  static RuntimeException fail(Object msg) {
-    throw new RuntimeException(String.valueOf(msg));
-  }
-
-  static RuntimeException fail(String msg) {
-    throw new RuntimeException(msg == null ? "" : msg);
-  }
-
-  static RuntimeException fail(String msg, Throwable innerException) {
-    throw new RuntimeException(msg, innerException);
-  }
-
-  static String getType(Object o) {
-    return getClassName(o);
-  }
-
-  static long getFileSize(String path) {
-    return path == null ? 0 : new File(path).length();
-  }
-
-  static long getFileSize(File f) {
-    return f == null ? 0 : f.length();
-  }
-
   static String repeat(char c, int n) {
     n = Math.max(n, 0);
     char[] chars = new char[n];
@@ -421,13 +312,5 @@ public class LinuxProcessSizeDetector {
 
   static <A> List<A> repeat(int n, A a) {
     return repeat(a, n);
-  }
-
-  static RuntimeException asRuntimeException(Throwable t) {
-    return t instanceof RuntimeException ? (RuntimeException) t : new RuntimeException(t);
-  }
-
-  static String getClassName(Object o) {
-    return o == null ? "null" : o instanceof Class ? ((Class) o).getName() : o.getClass().getName();
   }
 }
