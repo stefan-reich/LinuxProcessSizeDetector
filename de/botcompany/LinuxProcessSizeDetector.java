@@ -62,7 +62,7 @@ public class LinuxProcessSizeDetector {
       }
       long total = 0;
       for (long l : rssByRange.values()) total += l;
-      long guess = min == null ? total : total - min * 3;
+      long guess = min == null ? total : total - min * 2;
       return guess * 1024;
     } finally {
       _close(in);
